@@ -20,7 +20,7 @@ Download the Unihan.zip file to your local system. After compiling, run a local 
 This will open a local HTTP server on port 8978.
 Query it by sending it HTTP requests like this:
 
-    curl http://localhost:8978/character/91CF
+    curl http://localhost:8978/char/91CF
 
 This will provide information on Unicode character U+91CF.
 
