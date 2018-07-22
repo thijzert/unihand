@@ -51,6 +51,9 @@ type Character struct {
 		V string `json:",omitempty"`
 	}
 
+	// KangXi Radical number
+	KangXiRadicalNumber uint8 `json:",omitempty"`
+
 	// Radical-Stroke Counts
 	RadicalStrokeCounts struct {
 		KangXi  RScount

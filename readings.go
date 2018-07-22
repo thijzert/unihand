@@ -3,6 +3,11 @@ package unihand
 import (
 	"fmt"
 	"log"
+	"regexp"
+)
+
+var (
+	rxRad *regexp.Regexp
 )
 
 func init() {
@@ -17,6 +22,8 @@ func init() {
 		Filename:     "Unihan_Readings.txt",
 		RecordFilter: englishDefinition,
 	})
+
+	rxRad = regexp.MustCompile("(^|[,;]) ?(KangXi )?radical( number)? ?(\\d+)\\s*([,;]?)\\s*")
 }
 
 func englishDefinition(char *Character, code uint32, fields []string) error {
@@ -26,6 +33,18 @@ func englishDefinition(char *Character, code uint32, fields []string) error {
 
 	if fields[0] == "kDefinition" {
 		char.English = fields[1]
+
+		match := rxRad.FindStringSubmatchIndex(char.English)
+		if match != nil {
+			fmt.Sscan(char.English[match[8]:match[9]], &char.KangXiRadicalNumber)
+
+			// Remove 'KangXi radical number x' from the definition
+			if match[2] != match[3] && match[10] != match[11] {
+				char.English = char.English[:match[0]] + "; " + char.English[match[1]:]
+			} else {
+				char.English = char.English[:match[0]] + char.English[match[1]:]
+			}
+		}
 	}
 
 	return nil
